@@ -50,9 +50,9 @@ class AuthTest {
 
         val loginWebPage = LoginWebPage(driver)
         // Нужно управлять кэшом браузера чтобы было понятно состояние
-//        loginWebPage.usernameInput.sendKeys("a.perelygina")
-//        loginWebPage.usernamePassword.sendKeys("84.pNRznzbXf!Hb")
-//        loginWebPage.loginButton.click()
+        loginWebPage.usernameInput.sendKeys("a.perelygina")
+        loginWebPage.usernamePassword.sendKeys("84.pNRznzbXf!Hb")
+        loginWebPage.loginButton.click()
 
         loginWebPage.acceptButton.click()
 
