@@ -16,6 +16,10 @@ jobs:
       uses: actions/setup-java@v1
       with:
         java-version: 1.8
+    - name: Install Appium Server
+      run: |
+        chmod +x ./scripts/InstallAppiumServer.sh # install and run appium server in the background
+        ./scripts/InstallAppiumServer.sh
     - name: Run Appium Tests
       uses: reactivecircus/android-emulator-runner@v1 # install and create the Emulator
       with:
