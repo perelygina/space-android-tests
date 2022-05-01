@@ -22,7 +22,7 @@ class AuthTest {
     fun setup() {
         val options = UiAutomator2Options()
             .setDeviceName("name")
-            .setApp("/Users/admin/Downloads/Space.2020.5.6.apk")
+            .setApp("src/test/resources/Space.2020.5.6.apk")
             .setAppWaitActivity("circlet.android.ui.workspaces.WorkspacesActivity")
 
         service = AppiumServiceBuilder()
