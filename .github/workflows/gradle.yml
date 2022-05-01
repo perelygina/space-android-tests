@@ -21,11 +21,11 @@ jobs:
         chmod +x ./scripts/InstallAppiumServer.sh # install and run appium server in the background
         ./scripts/InstallAppiumServer.sh
     - name: Run Appium Tests
-      uses: reactivecircus/android-emulator-runner@v1 # install and create the Emulator
+      uses: reactivecircus/android-emulator-runner@v2 # install and create the Emulator
       with:
         api-level: ${{ matrix.api-level }}
         target: ${{ matrix.target }}
         arch: x86_64
         profile: Nexus 6
-        emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim -dns-server 8.8.8.8
+        emulator-options: -dns-server 8.8.8.8 -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim
         script: ./gradlew test --info # running our test with info to check the results
