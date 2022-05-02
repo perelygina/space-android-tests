@@ -1,5 +1,6 @@
 plugins {
     kotlin("jvm") version "1.6.0"
+    id("io.qameta.allure") version "2.9.6"
 }
 
 group = "com.jetbrains.space"

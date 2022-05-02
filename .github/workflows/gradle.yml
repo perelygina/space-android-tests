@@ -29,3 +29,12 @@ jobs:
         profile: Nexus 6
         emulator-options: -dns-server 8.8.8.8 -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim
         script: ./gradlew test --info # running our test with info to check the results
+    - name: Test marketplace action
+      uses: simple-elf/allure-report-action@master
+      if: always()
+      id: allure-report
+      with:
+#        allure_results: build/allure-results
+        gh_pages: gh-pages
+        allure_report: allure-report
+        allure_history: allure-history
