@@ -33,12 +33,7 @@ jobs:
         script: ./gradlew test --info # running our test with info to check the results
     - name: 📊 Step 5 - Collect Allure files and generate allure-report folder
       run: |
-        allure generate allure-results/
-    - name: 🎁 Step 6 - Publishing Allure results to GitHub Actions
-      uses: actions/upload-artifact@v2
-      with:
-        name: allure-results
-        path: allure-results
+        allure generate build/allure-results/
     - name: 🎁 Step 6 - Publishing Allure artifact to GitHub Actions
       uses: actions/upload-artifact@v2
       with:

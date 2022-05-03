@@ -17,6 +17,8 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import org.openqa.selenium.OutputType
 import org.openqa.selenium.TakesScreenshot
+import org.openqa.selenium.chrome.ChromeOptions
+import org.openqa.selenium.remote.RemoteWebDriver
 import java.io.ByteArrayInputStream
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -65,6 +67,9 @@ class AuthTest {
         loginWebPage.acceptButton.click()
 
         val appTourScreen = AppTourScreen(driver)
+
+        println(driver.pageSource)
+
         appTourScreen.skipTourButton.click()
 
         appTourScreen.todoButton.click()
