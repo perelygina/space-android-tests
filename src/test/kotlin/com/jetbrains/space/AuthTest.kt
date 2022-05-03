@@ -58,13 +58,15 @@ class AuthTest {
         addNewOrganizationScreen.logInButton.click()
 
         val loginWebPage = LoginWebPage(driver)
-        attachment()
         // Нужно управлять кэшом браузера чтобы было понятно состояние
         loginWebPage.usernameInput.sendKeys("a.perelygina")
         loginWebPage.usernamePassword.sendKeys("84.pNRznzbXf!Hb")
         loginWebPage.loginButton.click()
 
         loginWebPage.acceptButton.click()
+
+        Thread.sleep(5000)
+        attachment()
 
         val appTourScreen = AppTourScreen(driver)
 
