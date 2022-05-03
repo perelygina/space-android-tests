@@ -1,16 +1,23 @@
 package com.jetbrains.space
 
-import com.jetbrains.space.page.login.*
+import com.jetbrains.space.page.login.AddNewOrganizationScreen
+import com.jetbrains.space.page.login.AppTourScreen
+import com.jetbrains.space.page.login.LoginScreen
+import com.jetbrains.space.page.login.LoginWebPage
 import io.appium.java_client.AppiumDriver
 import io.appium.java_client.android.options.UiAutomator2Options
 import io.appium.java_client.service.local.AppiumDriverLocalService
 import io.appium.java_client.service.local.AppiumServiceBuilder
 import io.appium.java_client.service.local.flags.GeneralServerFlag
+import io.qameta.allure.Allure
+import io.qameta.allure.Step
 import org.junit.jupiter.api.AfterAll
-import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
+import org.openqa.selenium.OutputType
+import org.openqa.selenium.TakesScreenshot
+import java.io.ByteArrayInputStream
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class AuthTest {
@@ -49,6 +56,7 @@ class AuthTest {
         addNewOrganizationScreen.logInButton.click()
 
         val loginWebPage = LoginWebPage(driver)
+        attachment()
         // Нужно управлять кэшом браузера чтобы было понятно состояние
         loginWebPage.usernameInput.sendKeys("a.perelygina")
         loginWebPage.usernamePassword.sendKeys("84.pNRznzbXf!Hb")
@@ -64,6 +72,15 @@ class AuthTest {
 
     @AfterAll
     fun after() {
+        driver.quit()
         service.stop()
+    }
+
+    @Step
+    fun attachment() {
+        Allure.addAttachment(
+            "Any text",
+            ByteArrayInputStream((driver as TakesScreenshot).getScreenshotAs(OutputType.BYTES))
+        )
     }
 }

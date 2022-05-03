@@ -22,6 +22,7 @@ jobs:
         ./scripts/InstallAppiumServer.sh
         brew install allure
     - name: Run Appium Tests
+      continue-on-error: true
       uses: reactivecircus/android-emulator-runner@v2 # install and create the Emulator
       with:
         api-level: ${{ matrix.api-level }}
