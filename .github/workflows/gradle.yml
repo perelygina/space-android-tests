@@ -8,10 +8,10 @@ jobs:
     runs-on: macos-latest # the machine type
     strategy: # we are using strategy if we need to run on parallel with different devices and version
       matrix:
-        api-level: [25] #Google api level for example [25,23,28] 
+        api-level: [25] #Google api level for example [25,23,28]
         target: [default]
     steps:
-    - uses: actions/checkout@v2 #checkout the code 
+    - uses: actions/checkout@v2 #checkout the code
     - name: Set up JDK 1.8
       uses: actions/setup-java@v1
       with:
@@ -20,6 +20,7 @@ jobs:
       run: |
         chmod +x ./scripts/InstallAppiumServer.sh # install and run appium server in the background
         ./scripts/InstallAppiumServer.sh
+        brew install allure
     - name: Run Appium Tests
       uses: reactivecircus/android-emulator-runner@v2 # install and create the Emulator
       with:
@@ -29,12 +30,11 @@ jobs:
         profile: Nexus 6
         emulator-options: -dns-server 8.8.8.8 -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim
         script: ./gradlew test --info # running our test with info to check the results
-    - name: Test marketplace action
-      uses: simple-elf/allure-report-action@master
-      if: always()
-      id: allure-report
+    - name: 📊 Step 5 - Collect Allure files and generate allure-report folder
+      run: |
+        allure generate allure-results/
+    - name: 🎁 Step 6 - Publishing Allure artifact to GitHub Actions
+      uses: actions/upload-artifact@v2
       with:
-#        allure_results: build/allure-results
-        gh_pages: gh-pages
-        allure_report: allure-report
-        allure_history: allure-history
+        name: allure-report
+        path: allure-report
