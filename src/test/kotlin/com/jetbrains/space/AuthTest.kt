@@ -65,6 +65,8 @@ class AuthTest {
 
         loginWebPage.acceptButton.click()
 
+        loginWebPage.loginButton.click()
+
         Thread.sleep(5000)
         attachment()
 
