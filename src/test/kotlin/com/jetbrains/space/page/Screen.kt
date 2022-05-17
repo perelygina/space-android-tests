@@ -10,12 +10,9 @@ import org.openqa.selenium.support.ui.ExpectedConditions.visibilityOf
 import org.openqa.selenium.support.ui.WebDriverWait
 import java.time.Duration
 
-abstract class Screen(driver: AppiumDriver) {
-
-    private var driver: AppiumDriver
+data class Screen(val driver: AppiumDriver) {
 
     init {
-        this.driver = driver
         PageFactory.initElements(AppiumFieldDecorator(driver, Duration.ofSeconds(10)), this)
     }
 
