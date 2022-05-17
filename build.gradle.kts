@@ -15,11 +15,13 @@ repositories {
 
 dependencies {
     implementation(kotlin("stdlib"))
-    testImplementation("io.appium:java-client:8.0.0")
-    testImplementation ("org.seleniumhq.selenium:selenium-java:4.1.3")
+    implementation("io.appium:java-client:8.0.0") {
+        exclude("org.seleniumhq.selenium", "selenium-java")
+    }
+    implementation("org.seleniumhq.selenium:selenium-java:4.1.4")
+    implementation("commons-io:commons-io:2.11.0")
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.2")
     testImplementation("org.junit.jupiter:junit-jupiter-engine:5.8.2")
-    implementation("commons-io:commons-io:2.6")
 }
 
 tasks.test {
