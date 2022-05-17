@@ -31,10 +31,10 @@ jobs:
         profile: Nexus 6
         emulator-options: -dns-server 8.8.8.8 -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim
         script: ./gradlew test --info # running our test with info to check the results
-    - name: 📊 Step 5 - Collect Allure files and generate allure-report folder
+    - name: Generate allure-report folder
       run: |
         allure generate build/allure-results/
-    - name: 🎁 Step 6 - Publishing Allure artifact to GitHub Actions
+    - name: Publish Allure artifact to GitHub Actions
       uses: actions/upload-artifact@v2
       with:
         name: allure-report

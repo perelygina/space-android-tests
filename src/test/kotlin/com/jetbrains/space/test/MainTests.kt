@@ -44,7 +44,7 @@ import java.net.URL
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @TestMethodOrder(MethodOrderer.OrderAnnotation::class)
-class AuthTest {
+class MainTests {
 
     private val propertiesReader = PropertiesReader()
     private val options = getOptions()
@@ -93,15 +93,17 @@ class AuthTest {
         addAbsenceScreen.changeAvailabilityToggleValue(false)
         addAbsenceScreen.addAbsenceButton!!.click()
 
+//        can't catch the message
 //        assertTrue(
 //            addAbsenceScreen.isDisplayed(addAbsenceScreen.successMessage, ofMillis(1000)),
 //            "Success message is not displayed"
 //        )
 
-        driver.navigate().back()
-
         val dashboardScreenAfterAddingAbsence = DashboardScreen(driver)
-
+        assertTrue(
+            dashboardScreenAfterAddingAbsence.userNameText!!.isDisplayed,
+            "Unsuccessful loading of the dashboard"
+        )
         val lastCreatedAbsenceSummary = dashboardScreenAfterAddingAbsence.summaries!!.first().text
         val lastCreatedAbsenceDate = dashboardScreenAfterAddingAbsence.dates!!.first().text
 
@@ -111,7 +113,7 @@ class AuthTest {
 
 
     @Test
-    @DisplayName("")
+    @DisplayName("Search user by full name")
     @Order(2)
     fun searchUserByName() {
         val VALUE_TO_SEARCH = "Anastasiya Perelygina"
@@ -130,9 +132,9 @@ class AuthTest {
     }
 
     @Test
-    @DisplayName("")
+    @DisplayName("Send message to user")
     @Order(3)
-    fun sendMessageToYourself() {
+    fun sendMessage() {
         val MESSAGE_TEXT = "my message"
         val privateChatScreen = PrivateChatScreen(driver)
         privateChatScreen.sendTextMessage(MESSAGE_TEXT)
@@ -140,7 +142,7 @@ class AuthTest {
     }
 
     @AfterAll
-    fun after() {
+    fun teardown() {
         driver.quit()
         service.stop()
     }
@@ -170,7 +172,7 @@ class AuthTest {
     private fun getOptions(): UiAutomator2Options {
         return UiAutomator2Options()
             .setDeviceName(propertiesReader.getProperty(DEVICE_NAME))
-            .setApp(propertiesReader.getProperty(APP_FILE_NAME))
+            .setApp("/build/" + propertiesReader.getProperty(APP_FILE_NAME))
             .setAppWaitActivity(propertiesReader.getProperty(APP_WAIT_ACTIVITY))
     }
 }
