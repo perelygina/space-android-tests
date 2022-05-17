@@ -16,6 +16,9 @@ import com.jetbrains.space.util.PropertyConstants.Companion.APP_DOWNLOAD_LINK
 import com.jetbrains.space.util.PropertyConstants.Companion.APP_FILE_NAME
 import com.jetbrains.space.util.PropertyConstants.Companion.APP_WAIT_ACTIVITY
 import com.jetbrains.space.util.PropertyConstants.Companion.DEVICE_NAME
+import com.jetbrains.space.util.PropertyConstants.Companion.USER_NAME
+import com.jetbrains.space.util.PropertyConstants.Companion.USER_PASSWORD
+import com.jetbrains.space.util.PropertyConstants.Companion.WORKSPACE_NAME
 import io.appium.java_client.AppiumDriver
 import io.appium.java_client.android.options.UiAutomator2Options
 import io.appium.java_client.service.local.AppiumDriverLocalService
@@ -89,18 +92,17 @@ class AuthTest {
         loginScreen.addNewOrganizationButton.click()
 
         val addNewOrganizationScreen = AddNewOrganizationScreen(driver)
-        addNewOrganizationScreen.orgUrlInput.sendKeys("aperelygina.jetbrains.space")
+        addNewOrganizationScreen.orgUrlInput.sendKeys(propertiesReader.getProperty(WORKSPACE_NAME))
         addNewOrganizationScreen.logInButton.click()
 
         val loginWebPage = LoginWebPage(driver)
-        // Нужно управлять кэшом браузера чтобы было понятно состояние
-        loginWebPage.usernameInput.sendKeys("a.perelygina")
-        loginWebPage.usernamePassword.sendKeys("84.pNRznzbXf!Hb")
+        loginWebPage.usernameInput.sendKeys(propertiesReader.getProperty(USER_NAME))
+        loginWebPage.usernamePassword.sendKeys(propertiesReader.getProperty(USER_PASSWORD))
         loginWebPage.loginButton.click()
 
         loginWebPage.acceptButton.click()
 
-        loginWebPage.loginButton.click() //??
+//        loginWebPage.loginButton.click()
 
         Thread.sleep(5000)
         attachment()

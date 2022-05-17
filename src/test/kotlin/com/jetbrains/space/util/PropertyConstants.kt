@@ -9,5 +9,8 @@ class PropertyConstants {
         const val DEVICE_NAME = "deviceName"
         const val APPIUM_IP = "appiumIP"
         const val APPIUM_BASE_PATH = "appiumBasePath"
+        const val WORKSPACE_NAME = "workspaceName"
+        const val USER_NAME = "userName"
+        const val USER_PASSWORD = "userPassword"
     }
 }
