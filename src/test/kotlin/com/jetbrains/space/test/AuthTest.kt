@@ -82,12 +82,6 @@ class AuthTest {
     }
 
     fun login() {
-
-
-
-//        val welcomeScreen = WelcomeScreen(driver)
-//        assertNotNull(welcomeScreen.header.text)
-
         val loginScreen = LoginScreen(driver)
         loginScreen.addNewOrganizationButton.click()
 
@@ -102,17 +96,12 @@ class AuthTest {
 
         loginWebPage.acceptButton.click()
 
-//        loginWebPage.loginButton.click()
+        loginWebPage.loginButton.click()
 
-        Thread.sleep(5000)
         attachment()
 
         val appTourScreen = AppTourScreen(driver)
-
-        println(driver.pageSource)
-
         appTourScreen.skipTourButton.click()
-
         appTourScreen.todoButton.click()
     }
 
