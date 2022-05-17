@@ -72,6 +72,8 @@ class AuthTest {
 
         loginWebPage.acceptButton.click()
 
+        loginWebPage.loginButton.click() //??
+
         Thread.sleep(5000)
         attachment()
 
@@ -158,6 +160,7 @@ class AuthTest {
 
     @AfterAll
     fun after() {
+        attachment()
         driver.quit()
         service.stop()
     }
