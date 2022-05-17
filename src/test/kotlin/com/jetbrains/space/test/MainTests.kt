@@ -13,7 +13,6 @@ import com.jetbrains.space.util.PropertiesReader
 import com.jetbrains.space.util.PropertyConstants.Companion.APPIUM_BASE_PATH
 import com.jetbrains.space.util.PropertyConstants.Companion.APPIUM_IP
 import com.jetbrains.space.util.PropertyConstants.Companion.APP_DOWNLOAD_LINK
-import com.jetbrains.space.util.PropertyConstants.Companion.APP_FILE_NAME
 import com.jetbrains.space.util.PropertyConstants.Companion.APP_WAIT_ACTIVITY
 import com.jetbrains.space.util.PropertyConstants.Companion.DEVICE_NAME
 import com.jetbrains.space.util.PropertyConstants.Companion.USER_NAME
@@ -25,7 +24,6 @@ import io.appium.java_client.android.options.UiAutomator2Options
 import io.appium.java_client.service.local.AppiumDriverLocalService
 import io.appium.java_client.service.local.AppiumServiceBuilder
 import io.appium.java_client.service.local.flags.GeneralServerFlag
-import org.apache.commons.io.FileUtils
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
@@ -38,9 +36,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import org.junit.jupiter.api.TestMethodOrder
 import org.junit.jupiter.api.extension.RegisterExtension
-import java.io.File
 import java.lang.String.format
-import java.net.URL
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @TestMethodOrder(MethodOrderer.OrderAnnotation::class)
@@ -56,10 +52,6 @@ class MainTests {
 
     @BeforeAll
     fun setup() {
-        FileUtils.copyURLToFile(
-            URL(propertiesReader.getProperty(APP_DOWNLOAD_LINK)),
-            File(propertiesReader.getProperty(APP_FILE_NAME))
-        )
         service.start()
         login(propertiesReader.getProperty(USER_NAME), propertiesReader.getProperty(USER_PASSWORD))
     }
@@ -172,7 +164,7 @@ class MainTests {
     private fun getOptions(): UiAutomator2Options {
         return UiAutomator2Options()
             .setDeviceName(propertiesReader.getProperty(DEVICE_NAME))
-            .setApp("/build/" + propertiesReader.getProperty(APP_FILE_NAME))
+            .setApp(propertiesReader.getProperty(APP_DOWNLOAD_LINK))
             .setAppWaitActivity(propertiesReader.getProperty(APP_WAIT_ACTIVITY))
     }
 }
