@@ -9,6 +9,13 @@ import com.jetbrains.space.page.login.AppTourScreen
 import com.jetbrains.space.page.login.LoginScreen
 import com.jetbrains.space.page.login.LoginWebPage
 import com.jetbrains.space.page.search.SearchScreen
+import com.jetbrains.space.util.PropertiesReader
+import com.jetbrains.space.util.PropertyConstants.Companion.APPIUM_BASE_PATH
+import com.jetbrains.space.util.PropertyConstants.Companion.APPIUM_IP
+import com.jetbrains.space.util.PropertyConstants.Companion.APP_DOWNLOAD_LINK
+import com.jetbrains.space.util.PropertyConstants.Companion.APP_FILE_NAME
+import com.jetbrains.space.util.PropertyConstants.Companion.APP_WAIT_ACTIVITY
+import com.jetbrains.space.util.PropertyConstants.Companion.DEVICE_NAME
 import io.appium.java_client.AppiumDriver
 import io.appium.java_client.android.options.UiAutomator2Options
 import io.appium.java_client.service.local.AppiumDriverLocalService
@@ -16,16 +23,30 @@ import io.appium.java_client.service.local.AppiumServiceBuilder
 import io.appium.java_client.service.local.flags.GeneralServerFlag
 import io.qameta.allure.Allure
 import io.qameta.allure.Step
-import org.junit.jupiter.api.*
-import org.junit.jupiter.api.Assertions.*
+import org.apache.commons.io.FileUtils
+import org.junit.jupiter.api.AfterAll
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertNotNull
+import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.BeforeAll
+import org.junit.jupiter.api.DisplayName
+import org.junit.jupiter.api.MethodOrderer
+import org.junit.jupiter.api.Order
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.TestInstance
+import org.junit.jupiter.api.TestMethodOrder
 import org.openqa.selenium.OutputType
 import org.openqa.selenium.TakesScreenshot
 import java.io.ByteArrayInputStream
+import java.io.File
 import java.lang.String.format
+import java.net.URL
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @TestMethodOrder(MethodOrderer.OrderAnnotation::class)
 class AuthTest {
+
+    private val propertiesReader = PropertiesReader()
 
     lateinit var service: AppiumDriverLocalService
     lateinit var driver: AppiumDriver
@@ -35,15 +56,19 @@ class AuthTest {
 
     @BeforeAll
     fun setup() {
+        FileUtils.copyURLToFile(
+            URL(propertiesReader.getProperty(APP_DOWNLOAD_LINK)),
+            File(propertiesReader.getProperty(APP_FILE_NAME))
+        )
+
         val options = UiAutomator2Options()
-            .setDeviceName("name")
-            .setApp("src/test/resources/Space.2020.5.6.apk")
-            .setAppWaitActivity("circlet.android.ui.workspaces.WorkspacesActivity")
-//            .noReset()
+            .setDeviceName(propertiesReader.getProperty(DEVICE_NAME))
+            .setApp(propertiesReader.getProperty(APP_FILE_NAME))
+            .setAppWaitActivity(propertiesReader.getProperty(APP_WAIT_ACTIVITY))
 
         service = AppiumServiceBuilder()
-            .withIPAddress("127.0.0.1")
-            .withArgument(GeneralServerFlag.BASEPATH, "/wd/hub/")
+            .withIPAddress(propertiesReader.getProperty(APPIUM_IP))
+            .withArgument(GeneralServerFlag.BASEPATH, propertiesReader.getProperty(APPIUM_BASE_PATH))
             .usingAnyFreePort()
             .build()
 
@@ -54,6 +79,9 @@ class AuthTest {
     }
 
     fun login() {
+
+
+
 //        val welcomeScreen = WelcomeScreen(driver)
 //        assertNotNull(welcomeScreen.header.text)
 
