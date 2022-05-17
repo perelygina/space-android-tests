@@ -15,9 +15,11 @@ class LoginWebPage(driver: AppiumDriver) : Screen(driver) {
     @FindBy(xpath = "//android.webkit.WebView//android.widget.EditText[2]")
     lateinit var usernamePassword: WebElement
 
+//    Log in
     @FindBy(xpath = "//android.webkit.WebView//android.widget.Button")
     lateinit var loginButton: WebElement
 
+//    Accept
     // уже другая форма, лучше бы разделить
     @FindBy(xpath = "//android.webkit.WebView//android.widget.Button[2]")
     lateinit var acceptButton: WebElement
