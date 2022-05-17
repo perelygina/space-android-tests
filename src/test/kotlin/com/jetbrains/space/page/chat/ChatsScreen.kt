@@ -6,5 +6,5 @@ import io.appium.java_client.AppiumDriver
 
 class ChatsScreen(driver: AppiumDriver) : Screen(driver) {
 
-    lateinit var bottomNavBar: BottomNavBar
+    val bottomNavBar: BottomNavBar? = null
 }

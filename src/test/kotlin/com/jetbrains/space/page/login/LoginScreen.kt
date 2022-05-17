@@ -8,11 +8,11 @@ import org.openqa.selenium.WebElement
 class LoginScreen(driver: AppiumDriver) : Screen(driver) {
 
     @AndroidFindBy(id = "onboardingHeader")
-    lateinit var onboardingHeader: WebElement
+    val onboardingHeader: WebElement? = null
 
     @AndroidFindBy(xpath = "//android.widget.TextView[@text='Log in to your organization']")
-    lateinit var header: WebElement
+    val header: WebElement? = null
 
     @AndroidFindBy(id = "addNewOrganization")
-    lateinit var addNewOrganizationButton: WebElement
+    val addNewOrganizationButton: WebElement? = null
 }

@@ -19,13 +19,12 @@ import com.jetbrains.space.util.PropertyConstants.Companion.DEVICE_NAME
 import com.jetbrains.space.util.PropertyConstants.Companion.USER_NAME
 import com.jetbrains.space.util.PropertyConstants.Companion.USER_PASSWORD
 import com.jetbrains.space.util.PropertyConstants.Companion.WORKSPACE_NAME
+import com.jetbrains.space.util.Screenshoter
 import io.appium.java_client.AppiumDriver
 import io.appium.java_client.android.options.UiAutomator2Options
 import io.appium.java_client.service.local.AppiumDriverLocalService
 import io.appium.java_client.service.local.AppiumServiceBuilder
 import io.appium.java_client.service.local.flags.GeneralServerFlag
-import io.qameta.allure.Allure
-import io.qameta.allure.Step
 import org.apache.commons.io.FileUtils
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -38,9 +37,7 @@ import org.junit.jupiter.api.Order
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import org.junit.jupiter.api.TestMethodOrder
-import org.openqa.selenium.OutputType
-import org.openqa.selenium.TakesScreenshot
-import java.io.ByteArrayInputStream
+import org.junit.jupiter.api.extension.RegisterExtension
 import java.io.File
 import java.lang.String.format
 import java.net.URL
@@ -50,12 +47,12 @@ import java.net.URL
 class AuthTest {
 
     private val propertiesReader = PropertiesReader()
+    private val options = getOptions()
+    private val service = getAppiumService()
+    private val driver = AppiumDriver(service, options)
 
-    lateinit var service: AppiumDriverLocalService
-    lateinit var driver: AppiumDriver
-
-    private val REASON_DEFAULT_NAME = "Business Trip"
-    private val CUSTOM_DESCRIPTION = "My description"
+    @RegisterExtension
+    private val screenshoter = Screenshoter(driver)
 
     @BeforeAll
     fun setup() {
@@ -63,54 +60,19 @@ class AuthTest {
             URL(propertiesReader.getProperty(APP_DOWNLOAD_LINK)),
             File(propertiesReader.getProperty(APP_FILE_NAME))
         )
-
-        val options = UiAutomator2Options()
-            .setDeviceName(propertiesReader.getProperty(DEVICE_NAME))
-            .setApp(propertiesReader.getProperty(APP_FILE_NAME))
-            .setAppWaitActivity(propertiesReader.getProperty(APP_WAIT_ACTIVITY))
-
-        service = AppiumServiceBuilder()
-            .withIPAddress(propertiesReader.getProperty(APPIUM_IP))
-            .withArgument(GeneralServerFlag.BASEPATH, propertiesReader.getProperty(APPIUM_BASE_PATH))
-            .usingAnyFreePort()
-            .build()
-
         service.start()
-
-        driver = AppiumDriver(service, options)
-        login()
-    }
-
-    fun login() {
-        val loginScreen = LoginScreen(driver)
-        loginScreen.addNewOrganizationButton.click()
-
-        val addNewOrganizationScreen = AddNewOrganizationScreen(driver)
-        addNewOrganizationScreen.orgUrlInput.sendKeys(propertiesReader.getProperty(WORKSPACE_NAME))
-        addNewOrganizationScreen.logInButton.click()
-
-        val loginWebPage = LoginWebPage(driver)
-        loginWebPage.usernameInput.sendKeys(propertiesReader.getProperty(USER_NAME))
-        loginWebPage.usernamePassword.sendKeys(propertiesReader.getProperty(USER_PASSWORD))
-        loginWebPage.loginButton.click()
-
-        loginWebPage.acceptButton.click()
-
-        loginWebPage.loginButton.click()
-
-        attachment()
-
-        val appTourScreen = AppTourScreen(driver)
-        appTourScreen.skipTourButton.click()
-        appTourScreen.todoButton.click()
+        login(propertiesReader.getProperty(USER_NAME), propertiesReader.getProperty(USER_PASSWORD))
     }
 
     @Test
     @DisplayName("Add new absence")
     @Order(1)
     fun addAbsence() {
+        val REASON_DEFAULT_NAME = "Business Trip"
+        val CUSTOM_DESCRIPTION = "My description"
+
         val chatsScreen = ChatsScreen(driver)
-        chatsScreen.bottomNavBar.navigateToDashboard()
+        chatsScreen.bottomNavBar!!.navigateToDashboard()
 
         val dashboardScreen = DashboardScreen(driver)
         dashboardScreen.open3DotsMenu()
@@ -118,18 +80,18 @@ class AuthTest {
 
         val addAbsenceScreen = AddAbsenceScreen(driver)
 
-        assertEquals(REASON_DEFAULT_NAME, addAbsenceScreen.firstReasonText.text)
-        assertEquals(REASON_DEFAULT_NAME, addAbsenceScreen.descriptionEditText.text)
+        assertEquals(REASON_DEFAULT_NAME, addAbsenceScreen.firstReasonText!!.text)
+        assertEquals(REASON_DEFAULT_NAME, addAbsenceScreen.descriptionEditText!!.text)
 
         addAbsenceScreen.setDescription(CUSTOM_DESCRIPTION)
 
-        val startDate = addAbsenceScreen.startDateDropdownButton.text
-        val endDate = addAbsenceScreen.endDateDropdownButton.text
+        val startDate = addAbsenceScreen.startDateDropdownButton!!.text
+        val endDate = addAbsenceScreen.endDateDropdownButton!!.text
 
         assertEquals(startDate, endDate)
 
         addAbsenceScreen.changeAvailabilityToggleValue(false)
-        addAbsenceScreen.addAbsenceButton.click()
+        addAbsenceScreen.addAbsenceButton!!.click()
 
 //        assertTrue(
 //            addAbsenceScreen.isDisplayed(addAbsenceScreen.successMessage, ofMillis(1000)),
@@ -155,7 +117,7 @@ class AuthTest {
         val VALUE_TO_SEARCH = "Anastasiya Perelygina"
 
         val chatsScreen = ChatsScreen(driver)
-        chatsScreen.bottomNavBar.navigateToSearch()
+        chatsScreen.bottomNavBar!!.navigateToSearch()
 
         val searchScreen = SearchScreen(driver)
         searchScreen.setValueToSearch(VALUE_TO_SEARCH)
@@ -179,16 +141,36 @@ class AuthTest {
 
     @AfterAll
     fun after() {
-        attachment()
         driver.quit()
         service.stop()
     }
 
-    @Step
-    fun attachment() {
-        Allure.addAttachment(
-            "Any text",
-            ByteArrayInputStream((driver as TakesScreenshot).getScreenshotAs(OutputType.BYTES))
-        )
+    private fun login(username: String, password: String) {
+        val loginScreen = LoginScreen(driver)
+        loginScreen.addNewOrganizationButton!!.click()
+
+        val addNewOrganizationScreen = AddNewOrganizationScreen(driver)
+        addNewOrganizationScreen.setWorkspaceName(propertiesReader.getProperty(WORKSPACE_NAME))
+
+        val loginWebPage = LoginWebPage(driver)
+        loginWebPage.setUserLoginAndPassword(username, password)
+
+        val appTourScreen = AppTourScreen(driver)
+        appTourScreen.skipTour()
+    }
+
+    private fun getAppiumService(): AppiumDriverLocalService {
+        return AppiumServiceBuilder()
+            .withIPAddress(propertiesReader.getProperty(APPIUM_IP))
+            .withArgument(GeneralServerFlag.BASEPATH, propertiesReader.getProperty(APPIUM_BASE_PATH))
+            .usingAnyFreePort()
+            .build()
+    }
+
+    private fun getOptions(): UiAutomator2Options {
+        return UiAutomator2Options()
+            .setDeviceName(propertiesReader.getProperty(DEVICE_NAME))
+            .setApp(propertiesReader.getProperty(APP_FILE_NAME))
+            .setAppWaitActivity(propertiesReader.getProperty(APP_WAIT_ACTIVITY))
     }
 }

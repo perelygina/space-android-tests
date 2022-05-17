@@ -10,42 +10,42 @@ import org.openqa.selenium.WebElement
 class AddAbsenceScreen(driver: AppiumDriver) : Screen(driver) {
 
     @AndroidFindBy(id = "member_absence_reason_item_text")
-    lateinit var firstReasonText: WebElement
+    val firstReasonText: WebElement? = null
 
     @AndroidFindBy(id = "member_absence_add_description_edit_text")
-    lateinit var descriptionEditText: WebElement
+    val descriptionEditText: WebElement? = null
 
     @AndroidFindBy(
         xpath = "//*[contains(@resource-id,\"member_absence_add_date_start\")]" +
                 "/*[contains(@resource-id,\"widget_labeled_dropdown_button_the_button\")]"
     )
-    lateinit var startDateDropdownButton: WebElement
+    val startDateDropdownButton: WebElement? = null
 
     @AndroidFindBy(
         xpath = "//*[contains(@resource-id,\"member_absence_add_date_end\")]" +
                 "/*[contains(@resource-id,\"widget_labeled_dropdown_button_the_button\")]"
     )
-    lateinit var endDateDropdownButton: WebElement
+    val endDateDropdownButton: WebElement? = null
 
     @AndroidFindBy(id = "member_absence_add_available_switch")
-    lateinit var availabilityToggle: WebElement
+    val availabilityToggle: WebElement? = null
 
     @AndroidFindBy(id = "member_absence_submit")
-    lateinit var addAbsenceButton: WebElement
+    val addAbsenceButton: WebElement? = null
 
     @AndroidFindBy(xpath = "//*[@text=\"Absence successfully added!\"]")
-    lateinit var successMessage: WebElement
+    val successMessage: WebElement? = null
 
-    lateinit var bottomNavBar: BottomNavBar
+    val bottomNavBar: BottomNavBar? = null
 
     @Step("Enter value {value} in the description field")
-    fun setDescription(value: String){
-        descriptionEditText.sendKeys(value)
+    fun setDescription(value: String) {
+        descriptionEditText!!.sendKeys(value)
     }
 
     @Step("Set value {value} to the availability toggle")
     fun changeAvailabilityToggleValue(value: Boolean) {
-        val currentValue =  availabilityToggle.getAttribute("checked").toBoolean()
+        val currentValue = availabilityToggle!!.getAttribute("checked").toBoolean()
         if (value != currentValue) {
             availabilityToggle.click()
         }

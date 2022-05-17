@@ -10,13 +10,13 @@ import org.openqa.selenium.WebElement
 class DashboardScreen(driver: AppiumDriver) : Screen(driver) {
 
     @AndroidFindBy(id = "userName")
-    lateinit var userNameText: WebElement
+    val userNameText: WebElement? = null
 
     @AndroidFindBy(accessibility = "Ещё")
-    lateinit var moreButton: WebElement
+    val moreButton: WebElement? = null
 
     @AndroidFindBy(xpath = "//android.widget.TextView[@text=\"Add Absence\"]")
-    lateinit var addAbsenceButton: WebElement
+    val addAbsenceButton: WebElement? = null
 
     @AndroidFindBy(id = "absencesTitle")
     val title: WebElement? = null
@@ -31,11 +31,11 @@ class DashboardScreen(driver: AppiumDriver) : Screen(driver) {
 
     @Step("Open 3-Dots menu")
     fun open3DotsMenu() {
-        moreButton.click()
+        moreButton!!.click()
     }
 
     @Step("Tap on add absence button")
     fun tapOnAddAbsenceButton() {
-        addAbsenceButton.click()
+        addAbsenceButton!!.click()
     }
 }
